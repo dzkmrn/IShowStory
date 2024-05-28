@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">IShowStory</string>
+    <string name="signup">Signup</string>
+    <string name="login">Login</string>
+    <string name="message_welcome_page">Share your story on learning and discovering in Dicoding! From the beginning of fundamental android all the way into Intermediate Class, It should be fun, right?!</string>
+    <string name="title_welcome_page">Welcome to IShowStory!!</string>
+    <string name="title_signup_page">Filled your data down below!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="message_login_page">Input your data</string>
+    <string name="title_login_page">Time to share and see stories!</string>
+    <string name="name">Name</string>
+    <string name="message_main_page">Have fun with IShowStories!.</string>
+    <string name="greeting">Halo %1$s,</string>
+    <string name="logout">Logout</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="upload">Upload</string>
+    <string name="empty_image_warning">Please insert an image file first!.</string>
+    <string name="empty_description_warning">Please insert a description to continue!.</string>
+    <string name="edt_desc">Tell us about your story!</string>
+    <string name="password_error">Password must contain 8 chars minimum</string>
+    <string name="email_error">email format is not valid</string>
+</resources>
