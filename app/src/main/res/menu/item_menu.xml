@@ -2,7 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_item_maps"
+        android:title="maps"
+        android:icon="@drawable/baseline_map_24"
+        app:showAsAction="always"
+        />
+    <item
         android:id="@+id/menu_item_logout"
         android:title="Logout"
+        android:icon="@drawable/baseline_logout_24"
+        app:showAsAction="always"
         />
 </menu>

@@ -1,7 +1,6 @@
 package com.dicoding.picodiploma.ishowstory.data.pref
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -29,15 +28,15 @@ class UserPreferences(private val dataStore: DataStore<Preferences>) {
         }
     }
 
-    val token: Flow<String>
+    val token: Flow<String?>
         get() = dataStore.data.map { preferences ->
-            preferences[TOKEN_KEY] ?: ""
+            preferences[TOKEN_KEY].also { token ->
+            }
         }
 
     suspend fun saveToken(token: String) {
         dataStore.edit { preferences ->
             preferences[TOKEN_KEY] = token
-            Log.d("UserPreferences", "Token saved: $token")
         }
     }
 

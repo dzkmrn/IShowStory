@@ -12,23 +12,32 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface StoryApiService {
     @GET("stories")
     suspend fun getStories(
-        @Header("X-Auth-Token") token: String,
+        @Header("Authorization") token: String,
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 20
     ): Response<StoryResponse>
 
     @GET("stories/{id}")
     suspend fun getStoryDetail(
-        @Header("X-Auth-Token") token: String,
+        @Header("Authorization") token: String,
         @Path("id") id: String
     ): Response<DetailStoryResponse>
 
     @Multipart
     @POST("stories")
     suspend fun uploadImage(
+        @Header("Authorization") token: String,
         @Part file: MultipartBody.Part,
         @Part("description") description: RequestBody,
     ): Response<FileUploadResponse>
+
+    @GET("stories")
+    suspend fun getStoriesWithLocation(
+        @Query("location") location : Int = 1,
+    ): StoryResponse
 }

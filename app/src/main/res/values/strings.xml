@@ -21,4 +21,6 @@
     <string name="edt_desc">Tell us about your story!</string>
     <string name="password_error">Password must contain 8 chars minimum</string>
     <string name="email_error">email format is not valid</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="retry">Try again</string>
 </resources>

@@ -8,25 +8,18 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.picodiploma.ishowstory.R
 import com.dicoding.picodiploma.ishowstory.data.Result
-import com.dicoding.picodiploma.ishowstory.data.pref.UserPreferences
-import com.dicoding.picodiploma.ishowstory.data.pref.dataStore
-import com.dicoding.picodiploma.ishowstory.data.remote.response.StoryResponse
 import com.dicoding.picodiploma.ishowstory.databinding.ActivityMainBinding
+import com.dicoding.picodiploma.ishowstory.view.map.MapsActivity
 import com.dicoding.picodiploma.ishowstory.view.welcome.WelcomeActivity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.text.SimpleDateFormat
-import java.util.Date
-import kotlinx.coroutines.flow.collect
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(this)
     }
     private lateinit var binding: ActivityMainBinding
+    private lateinit var storyAdapter: StoryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,19 +35,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        val userPreferences = UserPreferences.getInstance(dataStore)
-        val token = runBlocking { userPreferences.token.first() }
+        storyAdapter = StoryAdapter()
 
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val currentTime: String = sdf.format(Date())
-
-        if (token != null) {
-            Log.d("tokenmain", "$currentTime $token")
-            observeStories(token)
-        }
-
-        setupAction()
         setupRecyclerView()
+        observeStories()
+        setupAction()
 
     }
 
@@ -65,10 +51,35 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_item_logout -> {
-                viewModel.logout()
+                showLogoutDialog()
                 true
             }
+
+            R.id.menu_item_maps -> {
+                val intent = Intent(this, MapsActivity::class.java)
+                startActivity(intent)
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun showLogoutDialog() {
+        AlertDialog.Builder(this).apply {
+            setTitle("Logout")
+            setMessage("Are you sure you want to logout?")
+            setPositiveButton("Yes") { _, _ ->
+                viewModel.logout()
+                val intent = Intent(this@MainActivity, WelcomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+            }
+            setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            create()
+            show()
         }
     }
 
@@ -81,23 +92,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         binding.rvStories.layoutManager = LinearLayoutManager(this)
+        binding.rvStories.adapter = storyAdapter
     }
 
-    private fun observeStories(token: String) {
-        viewModel.getStories(token).observe(this) { result ->
-            when (result) {
-                is Result.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-                is Result.Success -> {
-                    binding.progressBar.visibility = View.GONE
-                    val stories = result.data.listStory ?: emptyList()
-                    binding.rvStories.adapter = StoryAdapter(stories)
-                }
-                is Result.Error -> {
-                    Log.e("StoryActivity", "Error fetching stories: ${result.error}")
-                    viewModel.logout()
-                }
+    private fun observeStories() {
+        lifecycleScope.launch {
+            viewModel.getStories().collectLatest { pagingData ->
+                storyAdapter.submitData(pagingData)
             }
         }
     }

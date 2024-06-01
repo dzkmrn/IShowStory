@@ -92,31 +92,28 @@ class PostStoryActivity : AppCompatActivity() {
             }
 
             viewModel.uploadImage(imageFile, description).observe(this) { result ->
-                if (result != null) {
-                    when (result) {
-                        is Result.Loading -> {
-                            showLoading(true)
-                        }
+                when (result) {
+                    is Result.Loading -> {
+                        showLoading(true)
+                    }
 
-                        is Result.Error -> {
-                            showToast(result.error)
-                            showLoading(false)
-                        }
+                    is Result.Error -> {
+                        showToast(result.error)
+                        showLoading(false)
+                    }
 
-                        is Result.Success -> {
-                            AlertDialog.Builder(this).apply {
-                                setTitle("Story Uploaded!")
-                                setMessage("Thats crazy, now back to story feed")
-                                setPositiveButton("Continue") { _, _ ->
-                                    val intent = Intent(context, MainActivity::class.java)
-                                    intent.flags =
-                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                    startActivity(intent)
-                                    finish()
-                                }
-                                create()
-                                show()
+                    is Result.Success -> {
+                        AlertDialog.Builder(this).apply {
+                            setTitle("Story Uploaded!")
+                            setMessage("Thats crazy, now back to story feed")
+                            setPositiveButton("Continue") { _, _ ->
+                                val intent = Intent(context, MainActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                startActivity(intent)
+                                finish()
                             }
+                            create()
+                            show()
                         }
                     }
                 }

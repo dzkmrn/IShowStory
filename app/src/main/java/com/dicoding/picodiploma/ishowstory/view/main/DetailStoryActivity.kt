@@ -38,8 +38,8 @@ class DetailStoryActivity : AppCompatActivity() {
             }
             if (token != null) {
                 binding.progressBar.visibility = View.VISIBLE
-                val apiService = ApiConfig.getStoryApiService(token)
-                val response = apiService.getStoryDetail(token, storyId)
+                val apiService = ApiConfig.getStoryApiService()
+                val response = apiService.getStoryDetail("Bearer $token", storyId)
                 if (response.isSuccessful) {
                     binding.progressBar.visibility = View.GONE
                     val storyDetailResponse = response.body()
@@ -47,6 +47,7 @@ class DetailStoryActivity : AppCompatActivity() {
                         displayStoryDetails(it)
                     }
                 } else {
+                    binding.progressBar.visibility = View.GONE
                     Log.e("DetailStoryActivity", "Failed to fetch story details: ${response.message()}")
                 }
             } else {

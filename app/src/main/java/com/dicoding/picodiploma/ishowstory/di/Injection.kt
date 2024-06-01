@@ -11,9 +11,7 @@ object InjectionAuth {
         val dataStore = context.dataStore
         val userPreferences = UserPreferences.getInstance(dataStore)
         val token = runBlocking { userPreferences.token.first() }
-        Log.d("Injectionauth1", "Retrieved token: $token")
         val authApiService = ApiConfig.getAuthApiService(token ?: "")
-        Log.d("Injectionauth2", "Creating StoryApiService with token: $token")
         return AuthRepository.getInstance(authApiService, userPreferences)
     }
 }
@@ -22,10 +20,7 @@ object Injection {
     fun provideRepository(context: Context): StoryRepository {
         val dataStore = context.dataStore
         val userPreferences = UserPreferences.getInstance(dataStore)
-        val token = runBlocking { userPreferences.token.first() }
-        Log.d("Injection1", "Retrieved token: $token")
-        val storyApiService = ApiConfig.getStoryApiService(token ?: "")
-        Log.d("Injection2", "Creating StoryApiService with token: $token")
+        val storyApiService = ApiConfig.getStoryApiService()
         return StoryRepository.getInstance(storyApiService, userPreferences)
     }
 }

@@ -25,24 +25,11 @@ object ApiConfig {
         return retrofit.create(AuthApiService::class.java)
     }
 
-    fun getStoryApiService(token: String): StoryApiService {
-        var tmp = ""
-        tmp = token
-        Log.d("ApiConfig1", "Creating StoryApiService with token: $token")
+    fun getStoryApiService(): StoryApiService {
         val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-
-        val authInterceptor = Interceptor { chain ->
-            val req = chain.request()
-            Log.d("ApiConfig2", "Inside interceptor with token: $tmp")
-            val requestHeaders = req.newBuilder()
-                .addHeader("Authorization", "Bearer $tmp")
-                .build()
-            chain.proceed(requestHeaders)
-        }
 
         val client: OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .addInterceptor(authInterceptor)
             .build()
 
         val retrofit = Retrofit.Builder()

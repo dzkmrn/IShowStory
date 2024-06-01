@@ -3,6 +3,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.picodiploma.ishowstory.view.main.MainViewModel
+import com.dicoding.picodiploma.ishowstory.view.map.MapsViewModel
 import kotlinx.coroutines.runBlocking
 
 class ViewModelFactory private constructor(private val context: Context) : ViewModelProvider.Factory {
@@ -12,6 +13,10 @@ class ViewModelFactory private constructor(private val context: Context) : ViewM
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
                 val repository = runBlocking { Injection.provideRepository(context) }
                 MainViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                val repository = runBlocking { Injection.provideRepository(context) }
+                MapsViewModel(repository) as T
             }
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 val repository = runBlocking { InjectionAuth.provideRepository(context) }
