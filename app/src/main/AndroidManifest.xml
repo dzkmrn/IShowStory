@@ -17,10 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoginWithAnimation">
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDOqXb2TmASbQypAj4mKC0-TpUUsbCf9gs" />
-
         <activity
             android:name=".view.map.MapsActivity"
             android:exported="false"
